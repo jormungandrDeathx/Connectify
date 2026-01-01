@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+@theme{
+   
+    
+    --animate-infinite-scroll: infinite-scroll 60s linear infinite;
+    @keyframes infinite-scroll{
+        0%{
+            
+            transform: translatex(0);
+        }
+        100% {
+            
+            transform: translatex(-1000%)
+        }
+    }
+
+    --animate-infinite-scroll-r: infinite-scroll-r 60s linear infinite;
+    @keyframes infinite-scroll-r{
+        0%{
+            transform: translateX(-1000%);
+        }
+        100%{
+            transform: translateX(0);
+        }
+    }
+}
+
+/* .notFound{
+    position: relative;
+    height: 300px;
+    width: 300px;
+    mask-image: url("../public/scribble.png");
+    background: url("../public/connectify.svg");
+} */

@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/connectify.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Connectify</title>
+    <style>
+      #preLoader{
+        position:fixed;
+        inset: 0;
+        background: #F5F5F5;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 999;
+        transition: opacity 0.4s ease;
+      }
+
+      #preLoader.hide{
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      #preLoader img{
+        width: 120px;
+        animation: pulse 1.4s infinite ease-in-out;
+      }
+
+      @keyframes pulse{
+        0%{transform: scale(1); opacity: 0.6;}
+        50%{transform: scale(1.05); opacity: 1;}
+        100%{transform: scale(1); opacity: 0.6;}
+      }
+    </style>
+  </head>
+  <body class="dark:bg-white font-[Alan_sans]">
+    <div id="root">
+      <div id="preLoader">
+        <img src="/connectify.svg" alt="Loading"/>
+      </div>
+    </div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
