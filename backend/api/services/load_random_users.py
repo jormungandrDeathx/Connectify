@@ -7,7 +7,7 @@ from django.conf import settings
 from api.Models.user import Profile
 
 
-def load_random_users(count=250):
+def load_random_users(count=50):
     api=f"https://randomuser.me/api/?results={count}"
     response = requests.get(api, timeout=20)
     response.raise_for_status()

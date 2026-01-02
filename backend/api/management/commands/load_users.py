@@ -5,7 +5,7 @@ class Command(BaseCommand):
     help = "Load fake users"
     
     def add_arguments(self, parser):
-        parser.add_argument("--count", type=int, default=250)
+        parser.add_argument("--count", type=int, default=50)
         
     def handle(self, *args, **options):
         created = load_random_users(options["count"])
