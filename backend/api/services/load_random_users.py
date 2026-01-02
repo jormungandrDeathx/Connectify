@@ -7,16 +7,14 @@ from django.conf import settings
 from api.Models.user import Profile
 
 
-def load_random_users(count=50):
-    api=f"https://randomuser.me/api/?results={count}"
-    response = requests.get(api, timeout=20)
-    response.raise_for_status()
+def load_random_users():
+
+    filePath = os.path.join(settings.BASE_DIR, "api", "Data","fake_users.json")
+    if not os.path.exists(filePath):
+        raise FileNotFoundError("fake_usrs.json not found")
     
-    results = response.json()["results"]
-    
-    filePath = os.path.join(settings.BASE_DIR, "output.json")
-    with open(filePath, 'w', encoding='utf-8') as f:
-        json.dump(results, f, indent=4)
+    with open(filePath, 'r', encoding='utf-8') as f:
+        results = json.load(f)
         
     existing_emails = set(
         User.objects.values_list("email",flat=True)
@@ -26,10 +24,6 @@ def load_random_users(count=50):
         User.objects.values_list("username",flat=True)
     )
     
-    # new_items = [u for u in results if u["email"] not in existing_emails]
-    
-    # if not new_items:
-    #     return 0
     
     created = 0
     users=[]
