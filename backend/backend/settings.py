@@ -29,7 +29,8 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 DEBUG = False
 
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["https://connectify-5w08.onrender.com",
+                "https://connectify2026.netlify.app/"]
 
 
 INSTALLED_APPS = [
