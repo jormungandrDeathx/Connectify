@@ -29,8 +29,14 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 DEBUG = False
 
 
-ALLOWED_HOSTS = ["https://connectify-5w08.onrender.com",
-                "https://connectify2026.netlify.app/"]
+ALLOWED_HOSTS = [
+    "connectify-5w08.onrender.com",
+    ".onrender.com",
+    "connectify2026.netlify.app",
+    "localhost",
+    "127.0.0.1",
+]
+
 
 
 INSTALLED_APPS = [
@@ -166,7 +172,9 @@ STATIC_ROOT = BASE_DIR / "static"
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS = [
+    "https://connectify2026.netlify.app",
+]
 
 
 CORS_ALLOWED_CREDENTIALS = True
