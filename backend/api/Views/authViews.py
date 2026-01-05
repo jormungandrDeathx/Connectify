@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django.conf import settings
-from django.core.mail import EmailMultiAlternatives, BadHeaderError
+from django.core.mail import BadHeaderError
 from django.template.loader import render_to_string
 from django.http import HttpResponseRedirect
 from django.utils import timezone
@@ -49,7 +49,7 @@ def send_otp(email, htmlFile, username):
         payload = {
             "sender":{
                 "name":"Connectify",
-                "email":"no-reply@connectify.app"
+                "email":os.getenv("EMAIL_HOST")
             },
             "to":[{"email":email}],
             "subject":subject,
@@ -161,22 +161,27 @@ class SignupView(CreateAPIView):
         html = render_to_string("ConnectifyWelcome.html",{
             "banner_url":settings.EMAIL_BANNER,
             "user_name":user.first_name,
-            "get_started_url":"http://localhost:5173/",
-            "support_email":"http://localhost:5173/contact",
+            "get_started_url":"https://connectify2026.netlify.app/",
+            "support_email":"https://connectify2026.netlify.app/contact",
             "year": datetime.datetime.now().year
         })
         
-        email = EmailMultiAlternatives(
-            subject="Welcome to Connectify! 🎉",
-            body="",
-            from_email=settings.EMAIL_HOST_USER,
-            to=[user.email]
-        )
+        headers = {
+            "api-key":os.getenv("BREVO_API_KEY"),
+            "Content-Type":"application/json"
+        }
         
-        email.attach_alternative(html, "text/html")
+        payload={
+            "sender":{
+                "name":"Connectify",
+                "email":os.getenv("EMAIL_HOST")
+            },
+            "to":[{"email":user.email}],
+            "subject":"Welcome to Connectify! 🎉",
+            "htmlContent":html
+        }
         
-        email.send()
-        
+        requests.post(BREVO_URL, json=payload, headers=headers)
         
 
         
