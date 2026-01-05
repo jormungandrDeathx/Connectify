@@ -16,6 +16,7 @@ from rest_framework.parsers import MultiPartParser, JSONParser, FormParser
 from api.serializers import UserSerializer, ProfileSerializer, ChangePasswordSerializer
 
 from api.Models.emailOtp import EmailVerification
+from api.Models.user import Profile
 
 import secrets
 import datetime
@@ -136,13 +137,14 @@ class VerifyOTP(APIView):
 class SignupView(CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [AllowAny]
     
     def perform_create(self, serializer):
         user = serializer.save()
+        
                 
         
-        profile = user.profile
+        profile,_ = Profile.objects.get_or_create(user=user)
         
         request = self.request
        
@@ -160,9 +162,9 @@ class SignupView(CreateAPIView):
         
         html = render_to_string("ConnectifyWelcome.html",{
             "banner_url":settings.EMAIL_BANNER,
-            "user_name":user.first_name,
+            "username":user.first_name,
             "get_started_url":"https://connectify2026.netlify.app/",
-            "support_email":"https://connectify2026.netlify.app/contact",
+            "support_email":os.getenv("BREVO_SENDER"),
             "year": datetime.datetime.now().year
         })
         
@@ -180,8 +182,11 @@ class SignupView(CreateAPIView):
             "subject":"Welcome to Connectify! 🎉",
             "htmlContent":html
         }
-        
-        requests.post(BREVO_URL, json=payload, headers=headers)
+        try:
+            res=requests.post(BREVO_URL, json=payload, headers=headers)
+            res.raise_for_status()
+        except Exception as e:
+            print("Signup Email Failed: ",e)
         
 
         
