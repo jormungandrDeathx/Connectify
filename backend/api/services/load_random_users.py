@@ -1,10 +1,39 @@
 import os,json,requests
 from urllib.parse import urlparse
+
 from django.contrib.auth.models import User
 from django.core.files.base import ContentFile
 from django.utils.dateparse import parse_datetime
 from django.conf import settings
+
 from api.Models.user import Profile
+
+import cloudinary.uploader
+
+def LoadProfileURL(image_url, public_id):
+    try:
+        response = requests.get(
+            image_url,
+            timeout=20,
+            headers={"User-Agent":"Mozilla/5.0"}
+        )
+        
+        if response.status_code!=200:
+            raise Exception("Download failed")
+        
+        upload_result=cloudinary.uploader.upload(
+            response.content,
+            folder="Media/ProfilePictures",
+            public_id=public_id,
+            overwrite=True
+        )
+        
+        return upload_result["secure_url"]
+    
+    except Exception as e:
+        print("Image Error: ",e)
+        return settings.DEFAULT_AVATAR
+        
 
 
 def load_random_users():
@@ -72,21 +101,9 @@ def load_random_users():
         profile.country = item["location"]["country"]
         profile.createdAt = parse_datetime(item["registered"]["date"])
         
+        avatar_url = LoadProfileURL(item["picture"]["large"], public_id=f"profile_{user.username}")
         
-        try:
-            img = requests.get(item["picture"]["large"], timeout=15, headers={"User-Agent":"Mozilla/5.0"})
-            if img.status_code == 200:
-                filename = os.path.basename(urlparse(item["picture"]["large"]).path)
-                profile.profile_picture.save(
-                    filename,ContentFile(img.content),
-                    save=True
-                )
-            else:
-                raise Exception("Image download failed")
-        except Exception as e:
-            print("Image Error: ",e)
-            profile.profile_picture=settings.DEFAULT_AVATAR
-        
+        profile.profile_picture = avatar_url
         profile.save()
         created +=1
         
