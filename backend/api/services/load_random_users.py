@@ -10,31 +10,6 @@ from api.Models.user import Profile
 
 import cloudinary.uploader
 
-def LoadProfileURL(image_url, public_id):
-    try:
-        response = requests.get(
-            image_url,
-            timeout=20,
-            headers={"User-Agent":"Mozilla/5.0"}
-        )
-        
-        if response.status_code!=200:
-            raise Exception("Download failed")
-        
-        upload_result=cloudinary.uploader.upload(
-            response.content,
-            folder="Media/ProfilePictures",
-            public_id=public_id,
-            overwrite=True
-        )
-        
-        return upload_result["secure_url"]
-    
-    except Exception as e:
-        print("Image Error: ",e)
-        return settings.DEFAULT_AVATAR
-        
-
 
 def load_random_users():
 
@@ -99,11 +74,8 @@ def load_random_users():
         profile.city = item["location"]["city"]
         profile.state = item["location"]["state"]
         profile.country = item["location"]["country"]
-        profile.createdAt = parse_datetime(item["registered"]["date"])
-        
-        avatar_url = LoadProfileURL(item["picture"]["large"], public_id=f"profile_{user.username}")
-        
-        profile.profile_picture = avatar_url
+        profile.createdAt = parse_datetime(item["registered"]["date"])    
+        profile.profile_picture = item["picture"]["large"]
         profile.save()
         created +=1
         
