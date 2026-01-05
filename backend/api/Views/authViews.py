@@ -4,7 +4,6 @@ from django.core.mail import EmailMultiAlternatives, BadHeaderError
 from django.template.loader import render_to_string
 from django.http import HttpResponseRedirect
 from django.utils import timezone
-from django.contrib.auth import logout
 from django.contrib.auth.hashers import make_password, check_password
 
 from rest_framework.response import Response
@@ -20,7 +19,9 @@ from api.Models.emailOtp import EmailVerification
 
 import secrets
 import datetime
-import os
+import os,requests
+
+BREVO_URL = "https://api.brevo.com/v3/smtp/email"
 
 def send_otp(email, htmlFile, username):
         otp = str(secrets.randbelow(900000)+100000)
@@ -40,18 +41,25 @@ def send_otp(email, htmlFile, username):
             "year":datetime.datetime.now().year
         })
         
-        email = EmailMultiAlternatives(
-            subject=subject,
-            body="",
-            from_email=settings.EMAIL_HOST_USER,
-            to=[email]
-        )
+        headers = {
+            "api-key":os.getenv("BREVO_API_KEY"),
+            "Content-Type":"application/json"
+        }
         
-        email.attach_alternative(html,"text/html")
+        payload = {
+            "sender":{
+                "name":"Connectify",
+                "email":"no-reply@connectify.app"
+            },
+            "to":[{"email":email}],
+            "subject":subject,
+            "htmlContent":html,
+        }
             
         try:
-            sent = email.send()
-            return sent ==1 
+            sent = requests.post(BREVO_URL, json=payload, headers=headers)
+            sent.raise_for_status()
+            return True
         except Exception as e:
             print("Email Error: ",e)
             return False
