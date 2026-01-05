@@ -42,13 +42,10 @@ def load_random_users():
             last_name = item["name"]["last"],
             )
         user.set_password(item["login"]["password"])
-        users.append(user)
+        user.save()
         
         existing_emails.add(email)
         existing_username.add(username)
-        
-    
-    User.objects.bulk_create(users, batch_size=100)
     
     users_by_email = {
         u.email: u
@@ -70,6 +67,7 @@ def load_random_users():
         profile.phone_number = item["phone"]
         profile.street_number = item["location"]["street"]["number"]
         profile.street_name = str(item["location"]["street"]["name"])
+        profile.pincode = item["location"]["postcode"]
         profile.city = item["location"]["city"]
         profile.state = item["location"]["state"]
         profile.country = item["location"]["country"]
@@ -77,15 +75,15 @@ def load_random_users():
         
         
         try:
-            img = requests.get(item["picture"]["large"], timeout=10)
+            img = requests.get(item["picture"]["large"], timeout=15, headers={"User-Agent":"Mozilla/5.0"})
             if img.status_code == 200:
                 filename = os.path.basename(urlparse(item["picture"]["large"]).path)
                 profile.profile_picture.save(
                     filename,ContentFile(img.content),
-                    save=False
+                    save=True
                 )
-        except Exception:
-            pass
+        except Exception as e:
+            print("Image Error: ",e)
         
         profile.save()
         created +=1
