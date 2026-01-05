@@ -100,7 +100,7 @@ CHANNEL_LAYERS={
     'default':{
         "BACKEND":"channels_redis.core.RedisChannelLayer",
         "CONFIG":{
-            "hosts":[("127.0.0.1",6379)]
+            "hosts":[os.getenv("REDIS_URL")]
     }
     }
 }
@@ -109,7 +109,7 @@ CHANNEL_LAYERS={
 CACHES = {
     "default":{
         "BACKEND":"django_redis.cache.RedisCache",
-        "LOCATION":"redis://127.0.0.1:6379/1",
+        "LOCATION":os.getenv("REDIS_URL"),
         "OPTIONS":{
             "CLIENT_CLASS":"django_redis.client.DefaultClient"
         }
@@ -171,10 +171,14 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 
-CORS_ALLOWED_CREDENTIALS = True
+CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOW_HEADERS = list(default_headers)+[
     "authorization",
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://connectify2026.netlify.app"
 ]
 
 REST_FRAMEWORK={
