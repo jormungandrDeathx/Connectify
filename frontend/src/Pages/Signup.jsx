@@ -207,9 +207,9 @@ function Signup() {
 
       setAlert("OTP sent to your Gmail");
     } catch (e) {
-      console.error(e.response.data);
+      console.error(e.response?.data);
 
-      setAlert(e.response?.data.error);
+      setAlert(e.response?.data?.error);
       setProceed(true);
     } finally {
       setResend(true);

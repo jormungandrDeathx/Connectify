@@ -1,7 +1,6 @@
 import { Activity, useEffect, useRef, useState } from "react";
 import hamburger from "/src/assets/hamburger.png";
-// import Person from "../assets/Person.png";
-// import User from "/src/assets/Person.png";
+import { getWebSocketURL } from "../utils/ws";
 import Home from "/src/Pages/Home";
 import FriendList from "/src/Pages/FriendList";
 import EditProfile from "/src/Pages/EditProfile";
@@ -151,7 +150,7 @@ const [alert, setAlert] = useState(null)
     if (!token) return;
 
     const socket = new WebSocket(
-      `ws://127.0.0.1:8000/ws/friendRequestNotification/?token=${token}`
+      getWebSocketURL(`/ws/friendRequestNotification/?token=${token}`)
     );
 
     socket.onopen = () => {
@@ -205,7 +204,7 @@ const [alert, setAlert] = useState(null)
     if (!token) return;
 
     const ws = new WebSocket(
-      `ws://127.0.0.1:8000/ws/chat/global/?token=${token}`
+      getWebSocketURL(`/ws/chat/global/?token=${token}`)
     );
 
     ws.onopen = () => {
@@ -237,7 +236,7 @@ const [alert, setAlert] = useState(null)
     const token = localStorage.getItem("connectify_token");
     if (!token) return;
 
-    const ws = new WebSocket(`ws://127.0.0.1:8000/ws/presence/?token=${token}`);
+    const ws = new WebSocket(getWebSocketURL(`/ws/presence/?token=${token}`));
 
     presenceSocketRef.current = ws;
 

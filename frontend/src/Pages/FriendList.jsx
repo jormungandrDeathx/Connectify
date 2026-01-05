@@ -29,6 +29,7 @@ import {
 import { updatePresence } from "../Store/presenceSlice";
 
 import { encryptMessage, decryptMessage } from "../utils/crypto";
+import { getWebSocketURL } from "../utils/ws";
 
 function FriendList() {
   const [loading, setLoading] = useState(false);
@@ -239,7 +240,7 @@ function FriendList() {
 
     const token = localStorage.getItem("connectify_token");
     const newSocket = new WebSocket(
-      `ws://127.0.0.1:8000/ws/chat/?token=${token}&peer=${peerId}`
+      getWebSocketURL(`/ws/chat/?token=${token}&peer=${peerId}`)
     );
 
     newSocket.onopen = () => {
