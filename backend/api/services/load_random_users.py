@@ -8,7 +8,6 @@ from django.conf import settings
 
 from api.Models.user import Profile
 
-import cloudinary.uploader
 
 
 def load_random_users():

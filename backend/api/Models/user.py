@@ -4,7 +4,7 @@ from django.conf import settings
 
 class Profile(db.Model):
     user = db.OneToOneField(User, on_delete=db.CASCADE)
-    profile_picture = db.ImageField(upload_to='Media/ProfilePictures/',default=settings.DEFAULT_AVATAR,blank=True,null=True) 
+    profile_picture = db.ImageField(upload_to='Media/ProfilePictures/',default=settings.DEFAULT_AVATAR, max_length=500,blank=True,null=True) 
     phone_number = db.CharField()
     pincode = db.CharField(null=True,blank=True)
     street_number = db.CharField(null=True,blank=True)
