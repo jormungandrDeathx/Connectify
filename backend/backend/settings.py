@@ -175,10 +175,23 @@ CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOW_HEADERS = list(default_headers)+[
     "authorization",
+    "content-type"
 ]
+
 
 CSRF_TRUSTED_ORIGINS = [
     "https://connectify2026.netlify.app"
+]
+
+CORS_ALLOW_ALL_ORIGINS=False
+
+CORS_ALLOW_METHODS=[
+    "DELETE",
+    "GET",
+    "OPTIONS",
+    "PATCH",
+    "POST",
+    "PUT"
 ]
 
 REST_FRAMEWORK={

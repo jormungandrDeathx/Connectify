@@ -9,7 +9,7 @@ from django.contrib.auth.hashers import make_password, check_password
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status, permissions
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.generics import CreateAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView
 from rest_framework.parsers import MultiPartParser, JSONParser, FormParser
 
@@ -66,7 +66,7 @@ def send_otp(email, htmlFile, username):
 
 
 class SendEmailVerification(APIView):
-    permission_classes=[]
+    permission_classes=[AllowAny]
     
     def post(self,request):
         email = request.data.get("email","").strip()
@@ -106,7 +106,7 @@ class SendEmailVerification(APIView):
         
         
 class VerifyOTP(APIView):
-    permission_classes=[]
+    permission_classes=[AllowAny]
     
     def post(self,request):
         email=request.data.get("email","").strip().lower()
@@ -187,7 +187,7 @@ class SignupView(CreateAPIView):
         
         
 class AccountVerification(APIView):
-    permission_classes=[]
+    permission_classes=[AllowAny]
     
     def post(self,request):
         email = request.data.get("email").strip().lower()
@@ -219,7 +219,7 @@ class AccountVerification(APIView):
     
     
 class ForgetPasswordView(APIView):
-    permission_classes=[]
+    permission_classes=[AllowAny]
     
     def post(self,request):
         email= request.data.get("email")
