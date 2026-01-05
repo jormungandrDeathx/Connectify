@@ -40,6 +40,7 @@ ALLOWED_HOSTS = [
 
 
 INSTALLED_APPS = [
+    'corsheaders',
     'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -51,7 +52,6 @@ INSTALLED_APPS = [
     'cloudinary',
     'rest_framework',
     'channels',
-    'corsheaders',
     'rest_framework_simplejwt',
     'api.apps.ApiConfig',
     
