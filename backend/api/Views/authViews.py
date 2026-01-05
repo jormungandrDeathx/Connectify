@@ -49,7 +49,7 @@ def send_otp(email, htmlFile, username):
         payload = {
             "sender":{
                 "name":"Connectify",
-                "email":os.getenv("EMAIL_HOST")
+                "email":os.getenv("BREVO_SENDER")
             },
             "to":[{"email":email}],
             "subject":subject,
@@ -174,7 +174,7 @@ class SignupView(CreateAPIView):
         payload={
             "sender":{
                 "name":"Connectify",
-                "email":os.getenv("EMAIL_HOST")
+                "email":os.getenv("BREVO_SENDER")
             },
             "to":[{"email":user.email}],
             "subject":"Welcome to Connectify! 🎉",
