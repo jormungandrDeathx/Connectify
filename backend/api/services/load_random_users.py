@@ -26,7 +26,7 @@ def load_random_users():
     
     
     created = 0
-    users=[]
+    
     
     for item in results:
         username = item["login"]["username"]
@@ -35,14 +35,13 @@ def load_random_users():
         if email in existing_emails or username in existing_username:
             continue
         
-        user = User(
+        user = User.objects.create_user(
             email=email,
             username=username,
             first_name = item["name"]["first"],
             last_name = item["name"]["last"],
+            password=item["login"]["password"]
             )
-        user.set_password(item["login"]["password"])
-        user.save()
         
         existing_emails.add(email)
         existing_username.add(username)
@@ -82,8 +81,11 @@ def load_random_users():
                     filename,ContentFile(img.content),
                     save=True
                 )
+            else:
+                raise Exception("Image download failed")
         except Exception as e:
             print("Image Error: ",e)
+            profile.profile_picture=settings.DEFAULT_AVATAR
         
         profile.save()
         created +=1
