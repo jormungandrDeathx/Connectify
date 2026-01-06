@@ -12,6 +12,7 @@ class FriendRequest(db.Model):
     createdAt = db.DateTimeField(auto_now_add=True,db_index=True)
     
     class Meta:
+        ordering = ["-id"]
         unique_together = ("from_user","to_user")
         
     def __str__(self):
