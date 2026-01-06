@@ -24,6 +24,37 @@ import os,requests
 
 BREVO_URL = "https://api.brevo.com/v3/smtp/email"
 
+def send_welcome_mail(email, htmlFile, username):
+    html = render_to_string(htmlFile,{
+            "banner_url":settings.EMAIL_BANNER,
+            "username":username,
+            "get_started_url":"https://connectify2026.netlify.app/",
+            "support_email":os.getenv("BREVO_SENDER"),
+            "year": datetime.datetime.now().year
+        })
+        
+    headers = {
+            "api-key":os.getenv("BREVO_API_KEY"),
+            "Content-Type":"application/json"
+        }
+        
+    payload={
+            "sender":{
+                "name":"Connectify",
+                "email":os.getenv("BREVO_SENDER")
+            },
+            "to":[{"email":email}],
+            "subject":"Welcome to Connectify! 🎉",
+            "htmlContent":html
+        }
+    try:
+        res=requests.post(BREVO_URL, json=payload, headers=headers)
+        if res.status_code>=400:
+            print("Signup Email Failed", res.status_code, res.text)
+    except Exception as e:
+        print("Signup Email Failed: ",e)
+    
+
 def send_otp(email, htmlFile, username):
         otp = str(secrets.randbelow(900000)+100000)
         hashed_otp = make_password(otp)
@@ -157,34 +188,17 @@ class SignupView(CreateAPIView):
         
         profile.save() 
         
+       
+    def create(self, request, *args, **kwargs):
+        response = super().create(request, *args, **kwargs)
+        user = self.user 
         
-        html = render_to_string("ConnectifyWelcome.html",{
-            "banner_url":settings.EMAIL_BANNER,
-            "username":user.first_name,
-            "get_started_url":"https://connectify2026.netlify.app/",
-            "support_email":os.getenv("BREVO_SENDER"),
-            "year": datetime.datetime.now().year
-        })
-        
-        headers = {
-            "api-key":os.getenv("BREVO_API_KEY"),
-            "Content-Type":"application/json"
-        }
-        
-        payload={
-            "sender":{
-                "name":"Connectify",
-                "email":os.getenv("BREVO_SENDER")
-            },
-            "to":[{"email":user.email}],
-            "subject":"Welcome to Connectify! 🎉",
-            "htmlContent":html
-        }
         try:
-            res=requests.post(BREVO_URL, json=payload, headers=headers)
-            res.raise_for_status()
+            send_welcome_mail(user.email, "ConnectifyWelcome.html", user.first_name)
         except Exception as e:
-            print("Signup Email Failed: ",e)
+            print("Email Failed: ",e)
+            
+        return response
         
 
         
