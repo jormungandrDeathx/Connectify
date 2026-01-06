@@ -29,7 +29,7 @@ class PostCreateView(CreateAPIView):
 
 class PostsListView(ListAPIView):
     serializer_class = PostsSerializer
-    queryset = Posts.objects.all().order_by("-createdAt")
+    queryset = Posts.objects.all()
     
 
 class ToggleLikes(APIView):
