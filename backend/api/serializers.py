@@ -61,11 +61,6 @@ class UserSerializer(serializers.ModelSerializer):
         
         user = User.objects.create_user(**validated_data,password=password,
         )
-        
-        request = self.context.get("request")
-        
-       
-        Profile.objects.create(user=user)
         return user
     
    

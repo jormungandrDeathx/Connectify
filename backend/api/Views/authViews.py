@@ -142,8 +142,6 @@ class SignupView(CreateAPIView):
     def perform_create(self, serializer):
         user = serializer.save()
         
-                
-        
         profile,_ = Profile.objects.get_or_create(user=user)
         
         request = self.request
