@@ -3,7 +3,7 @@ import axios from "axios";
 let isRefreshing = false;
 let failedQueue = [];
 
-axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL
+axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL;
 axios.defaults.timeout = 10000;
 
 const processQueue = (error, token = null) => {
@@ -18,10 +18,54 @@ const processQueue = (error, token = null) => {
   failedQueue = [];
 };
 
+// Public endpoints that don't require authentication
+const PUBLIC_ENDPOINTS = [
+  "auth/send-otp/",
+  "auth/verify-otp/",
+  "signup/",
+  "token/",
+  "refresh/",
+  "auth/account-verification/",
+  "auth/forget-password/"
+];
+
+// REQUEST INTERCEPTOR - Attach token to every request
+axios.interceptors.request.use(
+  (config) => {
+    // Skip adding token for public endpoints
+    const isPublicEndpoint = PUBLIC_ENDPOINTS.some(endpoint => 
+      config.url?.includes(endpoint)
+    );
+
+    if (isPublicEndpoint) {
+      return config;
+    }
+
+    const token = localStorage.getItem("connectify_token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+// RESPONSE INTERCEPTOR - Handle token refresh on 401
 axios.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
+
+    // Prevent refresh loop on refresh endpoint itself
+    if (originalRequest.url?.includes("refresh/")) {
+      localStorage.removeItem("connectify_token");
+      localStorage.removeItem("connectify_user");
+      localStorage.removeItem("connectify_refresh");
+      window.location.href = "/";
+      return Promise.reject(error);
+    }
 
     if (error.response?.status === 401 && !originalRequest._retry) {
       if (isRefreshing) {
@@ -59,9 +103,7 @@ axios.interceptors.response.use(
         localStorage.setItem("connectify_token", newAccessToken);
 
         originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
-        axios.defaults.headers.common[
-          "Authorization"
-        ] = `Bearer ${newAccessToken}`;
+        axios.defaults.headers.common["Authorization"] = `Bearer ${newAccessToken}`;
 
         processQueue(null, newAccessToken);
 

@@ -1,11 +1,12 @@
 import uuid
 from django.db import models as db
+from django.conf import settings
 
 class Products(db.Model):
     id=db.UUIDField(
         primary_key=True,default=uuid.uuid4,editable=False
     )
-    product_id = db.CharField(max_length=50, unique=True)
+    product_id = db.IntegerField()
     productName = db.CharField(max_length=100)
     productPrice = db.FloatField(max_length=20)
     productDesc = db.CharField(max_length=100)
@@ -25,7 +26,7 @@ class Feedback(db.Model):
     feedback_id = db.IntegerField()
     category = db.CharField(max_length=50)
     userName = db.CharField(max_length=50)
-    profile_picture = db.ImageField(upload_to='Media/Feedback/',default="Avatar_kw0szi.jpg",blank=True,null=True) 
+    profile_picture = db.ImageField(upload_to='Media/Feedback',default=settings.DEFAULT_AVATAR,max_length=500, blank=True,null=True) 
     rating = db.IntegerField()
     message = db.CharField()
     product = db.CharField()
