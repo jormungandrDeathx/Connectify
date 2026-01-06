@@ -124,6 +124,21 @@ class UserSerializer(serializers.ModelSerializer):
         return instance
 
     
+class FriendListSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(source="user.id")
+    username = serializers.CharField(source="user.username")
+    profile_picture = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = Profile
+        fields = ["id","username","profile_picture"]
+        
+    def get_profile_picture(self, obj):
+        request = self.context.get("request")
+        if obj.profile_picture and request:
+            return request.build_absolute_uri(obj.profile_picture.url)
+        return None
+    
 class ChangePasswordSerializer(serializers.Serializer):
     old_password = serializers.CharField(required = True)
     new_password = serializers.CharField(required = True)
