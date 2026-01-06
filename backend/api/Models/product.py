@@ -7,11 +7,11 @@ class Products(db.Model):
         primary_key=True,default=uuid.uuid4,editable=False
     )
     product_id = db.IntegerField()
-    productName = db.CharField(max_length=500)
+    productName = db.CharField(max_length=1000)
     productPrice = db.FloatField(max_length=100)
-    productDesc = db.CharField(max_length=500)
+    productDesc = db.CharField(max_length=1000)
     productCat = db.CharField(max_length=200)
-    productImage = db.URLField(max_length=500)
+    productImage = db.URLField(max_length=1000)
     productRate = db.FloatField()
     productCount = db.IntegerField()
     
