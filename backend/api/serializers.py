@@ -124,6 +124,24 @@ class UserSerializer(serializers.ModelSerializer):
         return instance
 
     
+class FriendRequestSerialiser(serializers.ModelSerializer):
+    from_user = serializers.IntegerField(source="from_user.id",read_only=True)
+    from_username = serializers.CharField(source="from_user.username")
+    from_profile = serializers.SerializerMethodField()
+    
+    class Meta:
+        model=FriendRequest
+        fields=["id","from_user","to_user","from_username","from_profile","status","createdAt"]
+        
+    def get_from_profile(self,obj):
+        request = self.context.get("request")
+        profile = obj.from_user.profile
+        if profile.profile_picture and request:
+            return request.build_absolute_uri(profile.profile_picture.url)
+            
+        return None
+    
+    
 class FriendListSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(source="user.id")
     username = serializers.CharField(source="user.username")
