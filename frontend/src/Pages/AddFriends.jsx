@@ -37,7 +37,7 @@ function AddFriends() {
       const profileRes = await axios.get("profile");
       setUsername(profileRes.data.username);
     } catch (e) {
-      console.error("Error fetching users:", e);
+      console.error("Error fetching profile:", e);
       setError(true);
     } finally {
       setLoading(false);

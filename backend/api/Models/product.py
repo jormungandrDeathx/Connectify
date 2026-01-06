@@ -31,5 +31,8 @@ class Feedback(db.Model):
     message = db.CharField()
     product = db.CharField()
     
+    class Meta:
+        ordering=['-id']
+    
     def __str__(self):
         return self.product

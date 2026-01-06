@@ -16,6 +16,9 @@ class Profile(db.Model):
     friends = db.ManyToManyField("self",blank=True,symmetrical=False)
     is_online = db.BooleanField(default=False)
     last_seen = db.DateTimeField(null=True,blank=True)
+    
+    class Meta:
+        ordering = ['-id']
      
     def __str__(self):
         return self.user.username

@@ -179,7 +179,7 @@ class ProductsSerializer(serializers.ModelSerializer):
         
         
 class PeopleSerialiser(serializers.ModelSerializer):
-    user_id = serializers.CharField(source="user.id")
+    user_id = serializers.IntegerField(source="user.id")
     email = serializers.EmailField(source="user.email")
     username = serializers.CharField(source="user.username")
     first_name = serializers.CharField(source="user.first_name")

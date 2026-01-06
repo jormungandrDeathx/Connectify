@@ -10,7 +10,7 @@ from api.Models.user import Profile
 class PeopleView(ListAPIView):
     permission_classes=[IsAuthenticated]
     serializer_class = PeopleSerialiser
-    queryset = Profile.objects.all()
+    queryset = Profile.objects.all().order_by('-id')
     filter_backends = [SearchFilter]
     search_fields = ["user__username"]
 
