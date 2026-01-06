@@ -14,6 +14,9 @@ class Products(db.Model):
     productRate = db.FloatField()
     productCount = db.IntegerField()
     
+    class Meta:
+        ordering = ['-id']
+    
     def __str__(self):
         return self.productName
     
