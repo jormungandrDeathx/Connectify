@@ -19,6 +19,7 @@ class Command(BaseCommand):
         
         with transaction.atomic():
             call_command("load_users")
+            call_command("load_products")
             call_command("load_posts")
             call_command("load_feedbacks")
             
