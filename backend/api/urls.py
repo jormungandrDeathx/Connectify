@@ -22,7 +22,7 @@ urlpatterns = [
     path("comment/",Comment.as_view()),
     path("auth/send-otp/",SendEmailVerification.as_view()),
     path("auth/verify-otp/",VerifyOTP.as_view()),
-    path("profile/",ProfileView.as_view()),
+    path("profile/",ProfileView.as_view(), name="profile"),
     path('signup/',SignupView.as_view(),name='signup'),
     path("auth/forgetPassword/",AccountVerification.as_view()),
     path("auth/passwordReset/",ForgetPasswordView.as_view()),

@@ -19,7 +19,20 @@ class ProfileSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Profile
-        fields = "__all__"
+        fields =[
+            "profile_picture",
+            "phone_number",
+            "pincode",
+            "street_number",
+            "street_name",
+            "city",
+            "state",
+            "country",
+            "createdAt",
+            "friends",
+            "is_online",
+            "last_seen"
+        ]
 
 class UserSerializer(serializers.ModelSerializer):
     username = serializers.CharField(required=True)
@@ -195,7 +208,13 @@ class PeopleSerialiser(serializers.ModelSerializer):
     
     class Meta:
         model=Profile
-        fields="__all__"
+        fields=[
+            "profile_picture",
+            "city",
+            "state",
+            "country",
+            "createdAt"
+        ]
         
     def get_profile_picture(self, obj):
         request = self.context.get("request")
