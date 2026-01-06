@@ -87,7 +87,7 @@ class UserSerializer(serializers.ModelSerializer):
         user = User.objects.create_user(**validated_data, password=password)
         
         # Ensure profile is created immediately
-        Profile.objects.get_or_create(user=user)
+        profile,created = Profile.objects.get_or_create(user=user)
         
         return user
     

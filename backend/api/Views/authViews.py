@@ -5,6 +5,7 @@ from django.template.loader import render_to_string
 from django.http import HttpResponseRedirect
 from django.utils import timezone
 from django.contrib.auth.hashers import make_password, check_password
+from django.core.exceptions import ObjectDoesNotExist
 
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -174,7 +175,7 @@ class SignupView(CreateAPIView):
     def perform_create(self, serializer):
         user = serializer.save()
         
-        profile = user.profile
+        profile, created = Profile.objects.get_or_create(user=user)
         
         request = self.request
        
@@ -261,7 +262,9 @@ class ProfileView(RetrieveAPIView):
     permission_classes = [IsAuthenticated]
     
     def get_object(self):
-        return self.request.user.profile
+        profile,created = Profile.objects.get_or_create(user=self.request.user)
+        return profile
+        
         
         
 class UpdateProfileView(UpdateAPIView):
