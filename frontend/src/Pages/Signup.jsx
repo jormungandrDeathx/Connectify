@@ -236,7 +236,7 @@ function Signup() {
 
       setAccountCreationAlert("Account Created Successfully.");
     } catch (e) {
-      console.error("Error while creating: ", e.response?.data);
+      console.error("Error while creating: ", e.response);
       reset();
 
       setOtpSent(false);
