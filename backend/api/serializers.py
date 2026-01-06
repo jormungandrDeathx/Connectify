@@ -41,13 +41,18 @@ class ProfileSerializer(serializers.ModelSerializer):
         ]
         
     def get_profile_picture(self, obj):
+        request = self.context.get("request")
         try:
-            if obj.profile_picture and hasattr(obj.profile_picture, "url"):
-                request = self.context.get("request")
+            if obj.profile_picture and obj.profile_picture.name:
+                if obj.profile_picture.name == settings.DEFAULT_AVATAR:
+                    if request:
+                        return settings.DEFAULT_AVATAR
+                
                 if request:
                     return request.build_absolute_uri(obj.profile_picture.url)
                 return obj.profile_picture.url
-        except (AttributeError, ValueError, Exception):
+        except (AttributeError, ValueError, Exception) as e:
+            print(f"Profile Picture error: ",e)
             pass
         return None
 
