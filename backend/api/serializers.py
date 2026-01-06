@@ -26,7 +26,7 @@ class UserSerializer(serializers.ModelSerializer):
     password =serializers.CharField(write_only=True, required=False)
     first_name = serializers.CharField(required=False,allow_blank=True,default="")
     last_name = serializers.CharField(required=False,allow_blank=True,default="")
-    profile_picture = serializers.ImageField(source="profile.profile_picture",allow_empty_file=True)
+    profile_picture = serializers.ImageField(source="profile.profile_picture",required=False)
     class Meta:
         model = User
         fields = ["username","email","first_name","last_name","password","profile_picture"]
