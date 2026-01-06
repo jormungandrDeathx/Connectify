@@ -169,11 +169,12 @@ class SignupView(CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [AllowAny]
+    parser_classes = [MultiPartParser, FormParser, JSONParser]
     
     def perform_create(self, serializer):
         user = serializer.save()
         
-        profile,_ = Profile.objects.get_or_create(user=user)
+        profile = user.profile
         
         request = self.request
        
