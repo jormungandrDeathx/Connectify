@@ -188,17 +188,13 @@ class SignupView(CreateAPIView):
         
         profile.save() 
         
-       
-    def create(self, request, *args, **kwargs):
-        response = super().create(request, *args, **kwargs)
-        user = self.user 
         
         try:
             send_welcome_mail(user.email, "ConnectifyWelcome.html", user.first_name)
         except Exception as e:
             print("Email Failed: ",e)
             
-        return response
+        
         
 
         
