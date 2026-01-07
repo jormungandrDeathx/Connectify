@@ -26,7 +26,7 @@ class Feedback(db.Model):
     feedback_id = db.IntegerField()
     category = db.CharField(max_length=50)
     userName = db.CharField(max_length=50)
-    profile_picture = db.ImageField(upload_to='Media/Feedback',default=settings.DEFAULT_AVATAR,max_length=500, blank=True,null=True) 
+    profile_picture = db.ImageField(upload_to='Media/Feedback',default="Avatar_hzjeqe.jpg",max_length=500, blank=True,null=True) 
     rating = db.IntegerField()
     message = db.CharField()
     product = db.CharField()

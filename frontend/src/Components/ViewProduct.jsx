@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Footer from "./Footer";
 import { useSelector, useDispatch } from "react-redux";
 import { TiHeartOutline, TiHeartFullOutline } from "react-icons/ti";
@@ -14,8 +14,8 @@ function ViewProduct() {
   const [feedbacks, setFeedbacks] = useState(null);
   const [products, setProducts] = useState(null);
   let { id } = useParams();
-  //   const decodeId = Number(atob(id));
   const dispatch = useDispatch();
+  const navigate = useNavigate()
 
   useEffect(() => {
     axios
@@ -163,6 +163,7 @@ function ViewProduct() {
                   <img
                     src={products.productImage}
                     alt=""
+                    onClick={()=>navigate(`/products/${products.id}`)}
                     className="w-[100px] h-[100px] object-contain"
                   />
                 </div>
