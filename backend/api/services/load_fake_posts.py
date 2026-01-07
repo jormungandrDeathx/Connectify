@@ -39,22 +39,41 @@ def load_fake_posts():
         try:
             if item.get("userImage"):
                 img = requests.get(item["userImage"], timeout=10)
-                if img.status_code == 200:
+                img.raise_for_status()
+                if img.status_code == 200 and img.content:
+                    userFilename = os.path.basename(urlparse(item["userImage"]).path)
+                    if not userFilename or "." not in userFilename:
+                        userFilename = f"user_{post_id}.jpg"
                     post.userImage.save(
-                        os.path.basename(urlparse(item["userImage"]).path),
+                        userFilename,
                         ContentFile(img.content),
                         save=False
                     )
+                    print(f"Profile Picture saved: {userFilename}")
+                else:
+                    print(f"Failed to download userimage: HTTP {img.status_code}")
                     
             if item.get("postImage"):
                 img = requests.get(item["postImage"], timeout=10)
-                if img.status_code == 200:
+                if img.status_code == 200 and img.content:
+                    postFilename = os.path.basename(urlparse(item["postImage"]).path)
+                    if not postFilename or "." not in postFilename:
+                        postFilename=f"posts_{post_id}.jpg"
                     post.postImage.save(
-                        os.path.basename(urlparse(item["postImage"]).path),
+                        postFilename,
                         ContentFile(img.content),
                         save=False
                     )
-        except Exception:
+                    print(f"Profile Picture saved: {postFilename}")
+                else:
+                    print(f"Failed to download image: HTTP {img.status_code}")
+        
+        except requests.exceptions.Timeout:
+            print(f"Image download timeout")
+        except requests.exceptions.RequestException as e:
+            print(f"Image download error: {e}")
+        except Exception as e:
+            print(f"unexpected error : {e}")
             pass
         
         post.save()
