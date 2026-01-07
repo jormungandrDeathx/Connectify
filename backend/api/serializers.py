@@ -213,6 +213,7 @@ class ProductsSerializer(serializers.ModelSerializer):
         
         
 class PeopleSerialiser(serializers.ModelSerializer):
+    user_id = serializers.IntegerField(source = "user.id", read_only = True)
     username = serializers.CharField(source = "user.username", read_only=True)
     email = serializers.EmailField(source = "user.email", read_only = True)
     first_name = serializers.CharField(source = "user.first_name", read_only = True)
@@ -223,6 +224,7 @@ class PeopleSerialiser(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields =[
+            "user_id",
             "username",
             "email",
             "first_name",
