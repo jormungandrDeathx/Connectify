@@ -16,6 +16,8 @@ from api.Views.friendsView import (SendFriendrequest, SentFriendRequest, AcceptF
 
 from api.Views.chatViews import (ChatHistory, UnreadMessagesView, Userstatus)
 
+from api.Views.healthView import Health
+
 urlpatterns = [
     path('token/',TokenObtainPairView.as_view(),name="token_obtain_pair"),
     path('refresh/',TokenRefreshView.as_view(),name="token_refresh"),
@@ -50,5 +52,6 @@ urlpatterns = [
     path("friends/remove/<int:user_id>/",RemoveFriend.as_view()),
     path("chat/history/<int:peer_id>/",ChatHistory.as_view()),
     path("chat/isOnline/<int:user_id>/",Userstatus.as_view()),
-    path("chat/unread/",UnreadMessagesView.as_view())
+    path("chat/unread/",UnreadMessagesView.as_view()),
+    path("health/",Health.as_view())
 ]

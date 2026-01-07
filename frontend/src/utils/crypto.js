@@ -1,6 +1,6 @@
 import CryptoJs from "crypto-js"
 
-const SECRET_KEY = import.meta.env.VITECHAT_ENCRYPTION_KEY
+const SECRET_KEY = import.meta.env.VITE_CHAT_ENCRYPTION_KEY
 
 export function encryptMessage(text){
     return CryptoJs.AES.encrypt(text, SECRET_KEY).toString()

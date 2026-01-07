@@ -559,7 +559,7 @@ function alertFalse(){
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
                       e.preventDefault();
-                      if (message.trim() !== "") {
+                      if (message?.trim() !== "") {
                         sendMessage(message);
                         inputRef.current.value = "";
                       }
@@ -567,13 +567,13 @@ function alertFalse(){
                   }}
                 />
                 <button
-                  disabled={message.trim() === ""}
+                  disabled={message?.trim() === ""}
                   onClick={() => {
                     sendMessage(message);
                     inputRef.current.value = "";
                   }}
                 >
-                  {message.trim() !== "" ? (
+                  {message?.trim() !== "" ? (
                     <TbSend className="text-xl" />
                   ) : (
                     <TbSendOff className="text-xl" />
