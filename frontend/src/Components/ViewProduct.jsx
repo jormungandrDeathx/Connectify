@@ -8,22 +8,27 @@ import { addWishLists, removeWishLists } from "../Store/wishListsSlice";
 import { FaCartShopping } from "react-icons/fa6";
 import { FaCommentDots } from "react-icons/fa6";
 import { addItem } from "../Store/cartSlice";
+import Loading from "./Loading";
 
 function ViewProduct() {
   const [item, setitem] = useState(null);
   const [feedbacks, setFeedbacks] = useState(null);
   const [products, setProducts] = useState(null);
+  const [loading, setLoading] = useState(false)
   let { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate()
 
   useEffect(() => {
+    setLoading(true)
     axios
       .get(`products/${id}`)
       .then((res) => {
         setitem(res.data);
       })
-      .catch(console.error);
+      .catch(console.error)
+      .finally(()=>setLoading(false))
+      
 
     axios
       .get("products/")
@@ -36,10 +41,12 @@ function ViewProduct() {
         setFeedbacks(res.data.results);
       })
       .catch(console.error);
-  }, []);
+
+    window.scrollTo(0,0)
+  }, [id]);
 
   const relatedProducts = products?.filter(
-    (i) => item?.productCat.trim() === i.productCat.trim()
+    (i) => item?.productCat.trim() === i.productCat.trim() && i.id !==item.id
   );
 
   const feedback = feedbacks?.filter(
@@ -56,6 +63,10 @@ function ViewProduct() {
 
   function handleRemoveWishLists(item) {
     dispatch(removeWishLists(item));
+  }
+
+  if (loading){
+    return <Loading/>
   }
 
   return (

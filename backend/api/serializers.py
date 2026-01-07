@@ -213,34 +213,47 @@ class ProductsSerializer(serializers.ModelSerializer):
         
         
 class PeopleSerialiser(serializers.ModelSerializer):
-    user_id = serializers.IntegerField(source="user.id")
-    email = serializers.EmailField(source="user.email")
-    username = serializers.CharField(source="user.username")
-    first_name = serializers.CharField(source="user.first_name")
-    last_name = serializers.CharField(source="user.last_name")
-    
+    username = serializers.CharField(source = "user.username", read_only=True)
+    email = serializers.EmailField(source = "user.email", read_only = True)
+    first_name = serializers.CharField(source = "user.first_name", read_only = True)
+    last_name = serializers.CharField(source = "user.last_name", read_only=True)
     profile_picture = serializers.SerializerMethodField()
-    
-    city = serializers.CharField(allow_blank=True, required=False)
-    state = serializers.CharField(allow_blank=True, required=False)
-    country = serializers.CharField(allow_blank=True, required=False)
-    createdAt = serializers.DateTimeField(required=False)
-    
+    friends = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     
     class Meta:
-        model=Profile
-        fields=[
+        model = Profile
+        fields =[
+            "username",
+            "email",
+            "first_name",
+            "last_name",
             "profile_picture",
+            "phone_number",
+            "pincode",
+            "street_number",
+            "street_name",
             "city",
             "state",
             "country",
-            "createdAt"
+            "createdAt",
+            "friends",
+            "is_online",
+            "last_seen"
         ]
         
     def get_profile_picture(self, obj):
         request = self.context.get("request")
-        if obj.profile_picture and request:
-            return request.build_absolute_uri(obj.profile_picture.url)
+        try:
+            if obj.profile_picture and obj.profile_picture.name:
+                picture_url = obj.profile_picture.url
+                if picture_url.startswith("http"):
+                    return picture_url
+                
+                if request:
+                    return request.build_absolute_uri(obj.profile_picture.url)
+        except (AttributeError, ValueError, Exception) as e:
+            print(f"Profile Picture error: ",e)
+            pass
         return None
         
         
